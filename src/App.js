@@ -1,5 +1,6 @@
 // JSXのタグはトランスパイルをするとReact.create.elementに変換されるので必ず必要
 import React, {Component} from 'react';
+import propTypes from 'prop-types';
 
   /*
   演習03 コンポーネント
@@ -57,8 +58,8 @@ const App = () => {
 
 /*
 演習04 props
-  親のコンポーネントから子コンポーネントにデータを渡したいときに使う
-  Mapで管理
+  props 親のコンポーネントから子コンポーネントにデータを渡したいときに使う
+  propsの要素はMapで管理
 */
   const profiles = [
     {name: "taro", age: 10},
@@ -93,6 +94,17 @@ const Cat = () =>{
 */
 const User = (props) =>{
 return <div>Hi! I am {props.name}, and {props.age} years old! </div>
+}
+
+/*
+演習 05 prop-types
+  prop-types コンポーネントのプロパティに対する型をチェックを定義する
+  propTypes.型名で型を宣言
+  .isRequiredで必須項目の設定ができる
+*/
+User.propTypes = {
+  name: propTypes.string,
+  age: propTypes.number.isRequired
 }
 
 // デフォルトpropsを設定することで宣言されなかった場合このデフォルト値が参照される
