@@ -2,12 +2,12 @@
 import React, {Component} from 'react';
 import propTypes from 'prop-types';
 
-  /*
-  演習03 コンポーネント
-　  クラスコンポーネント
-  */
- /*
- class App extends Comment {
+/*
+演習03 コンポーネント
+  クラスコンポーネント
+*/
+/*
+ class App extends Component {
    render(){
      return (
        <React.Fragment>
@@ -17,11 +17,10 @@ import propTypes from 'prop-types';
      )
    }
  }
- */
+*/
 
 // 関数コンポーネント
-const App = () => {
-
+//const App = () => {
 /*
 演習01 02 基礎
   変数を返却することもできる
@@ -61,6 +60,7 @@ const App = () => {
   props 親のコンポーネントから子コンポーネントにデータを渡したいときに使う
   propsの要素はMapで管理
 */
+/*
   const profiles = [
     {name: "taro", age: 10},
     {name: "hanako", age: 5},
@@ -75,7 +75,8 @@ const App = () => {
       }
     </div>
   )
-}
+*/
+//}
 
 /*
   演習03 コンポーネント
@@ -112,6 +113,46 @@ User.defaultProps ={
   age: 1
 }
 
+/*
+ 演習 06 state
+  state propsと違いコンポーネントの内部のみで使用される
+        またpropsは変更不可能な値、イミュータブルな値だったのに対してstateは変更可能
+  
+  このアップコンポーネントがカウンターコンポーネントを呼ぶ
+*/
+const App = () => (<Counter></Counter>)
 
+class Counter extends Component {
+  // コンポーネントの初期化
+  constructor(props) {
+    super(props)
+    console.log(this.state)
+    this.state = {count: 0 }
+  }
+
+  // カウントアップ処理。handlePlusButtonが押されたら反応
+  // 状態を変えたときにDomも更新したいのでthis.state = {count: this.state.count + 1 }みたいな感じで直接いじるのはダメ
+  // setStateを使うと状態と一緒に仮想Domも再描画される
+  handlePlusButton = () => {
+    this.setState({count: this.state.count + 1})
+  }
+
+  // カウントダウン処理。handleMinusButtonが押されたら反応
+  handleMinusButton = () => {
+    this.setState({count: this.state.count - 1})
+  }
+
+
+  render() {
+    console.log(this.state)
+    return (
+      <React.Fragment>
+        <div>counter: { this.state.count }</div>
+        <button onClick={this.handlePlusButton}>+1</button>
+        <button onClick={this.handleMinusButton}>-1</button>
+      </React.Fragment>
+      )
+  }
+}
 
 export default App;
