@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { getEvents, deleteEvents, putEvent } from '../actions'
 
 /*
-イベント新規作成
+IDを元にイベントを取得　更新　削除
 */
 class EventsShow extends Component {
     constructor(props) {
@@ -14,6 +14,13 @@ class EventsShow extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.onDeleteClick = this.onDeleteClick.bind(this)
     }
+
+    //直接IDを指定して叩かれた場合getEventで情報を抽出してレンダリング
+    componentDidMount(){
+        const {id} = this.props.match.params
+        if(id) this.props.getEvents(id)
+    }
+
     renderField(field) {
         const { input, label, type, meta: {touched, error} } = field
 
@@ -25,22 +32,21 @@ class EventsShow extends Component {
         )
     }
 
+    // 削除
     async onDeleteClick() {
         const { id } = this.props.match.params
         await this.props.deleteEvents(id)
         this.props.history.push('/')
     }
 
+    // 更新
     async onSubmit(values) {
-        // await this.props.postEvents(values)
+        await this.props.putEvent(values)
         this.props.history.push('/')
     }
 
     render() {
-        // handleSubmitはrenderが実行された時に渡ってくる関数なのでここで拾っとく
-        // pristine 何も入力されていない状態を示すもの。これを活用してサブミットボタンを制御する
-        // submitting サブミットしたらTrueになる。これを使ってダブルクリックを許さない
-        const { handleSubmit, pristine, submitting } = this.props
+        const { handleSubmit, pristine, submitting, invalid } = this.props
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
                 <div>
@@ -49,7 +55,7 @@ class EventsShow extends Component {
                 </div>
 
                 <div>
-                    <input type="submit" value="Submit" disabled={pristine || submitting} />
+                    <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
                     <Link to="/" >Cancel</Link>
                     <Link to="/" onClick={ this.onDeleteClick }>Delete</Link>
                 </div>
@@ -72,8 +78,15 @@ const validate = values => {
   
     return errors
   }
-  const mapDispatchToProps = { deleteEvents }
 
-export default connect(null, mapDispatchToProps)(
-    reduxForm({ validate, form: "eventShowForm" })(EventsShow)
+  const mapStateToProps = (state, ownProps) => {
+      const event = state.events[ownProps.match.params.id]
+      return { initialValues: event, state }
+  }
+
+  const mapDispatchToProps = { deleteEvents, getEvents, putEvent }
+
+  // enableReinitialize TrueにするとinitialValuesの値が変わるたびに初期化される
+export default connect(mapStateToProps, mapDispatchToProps)(
+    reduxForm({ validate, form: "eventShowForm", enableReinitialize: true })(EventsShow)
     )
