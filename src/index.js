@@ -4,15 +4,19 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { composeWithDevTools} from 'redux-devtools-extension'
 
 import './index.css';
 import reducer from './reducers'
 import EventsIndex from './components/events-index';
 import EventsNew from './components/events-new';
-
+import EventsShow from './components/events-show';
 import * as serviceWorker from './serviceWorker';
 
-const store = createStore(reducer, applyMiddleware(thunk))
+// Devかどうかで挙動を変える devの場合のみapplyMiddlewareをcomposeWithDevToolsで拡張する
+const enhanser = process.env.NODE_ENV === 'development' ?
+    composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk)
+const store = createStore(reducer, enhanser)
 /*
 ここで作られるstoreはアプリケーションで唯一のもの
 アプリケーション内部の全てのstateはこのストアに集約される
@@ -24,8 +28,10 @@ ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
             <Switch>
-                <Route exact path="/events/new" component={EventsNew} />
-                <Route exact path="/" component={EventsIndex} />
+                <Route path="/events/new" component={EventsNew} />
+                <Route path="/events/:id" component={EventsShow} />
+                <Route path="/" component={EventsIndex} />
+                <Route path="/events" component={EventsIndex} />
             </Switch>
         </BrowserRouter>
     </Provider>,
