@@ -1,27 +1,49 @@
-// JSXのタグはトランスパイルをするとReact.create.elementに変換されるので必ず必要
 import React, {Component} from 'react';
-// import propTypes from 'prop-types';
 
-// 演習07でインポート
 import { connect } from 'react-redux'
-import { increment, decrement } from '../actions'
+import { readEvents } from '../actions'
+import _ from 'lodash'
 
+/*
+イベント一覧
+コンポーネントにはマウント時実行されるコールバックがあるのでそれを使う
+イベント一覧の初期マウント時に外部APIに対して全イベント取得する処理を実装
+*/
 class EventsIndex extends Component {
-  render() {
-    const props = this.props
+    componentDidMount() {
+        this.props.readEvents()
+    }
 
-    return (
-      <React.Fragment>
-        <div>value: { props.value }</div>
-        <button onClick={ props.increment }> +1 </button>
-        <button onClick={ props.decrement }> -1 </button>
-      </React.Fragment>
-      )
-  }
+    renderEvents() {
+        return _.map(this.props.events, event => (
+            <tr key={event.id}>
+                <td>{event.id}</td>
+                <td>{event.title}</td>
+                <td>{event.body}</td>
+            </tr>
+        ))
+    }
+
+    render() {
+        return (
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {this.renderEvents()}
+                </tbody>
+            </table>
+        )
+    }
 }
 
-const mapStateToProps = state => ({ value: state.count.value })
-
-const mapDispatchToProps = ({ increment, decrement })
+const mapStateToProps = state => ({ events: state.events })
+const mapDispatchToProps = { readEvents }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsIndex)
