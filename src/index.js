@@ -4,7 +4,7 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
 import './index.css';
-import App from './components/App';
+import EventsIndex from './components/events-index';
 
 import reducer from './reducers'
 import * as serviceWorker from './serviceWorker';
@@ -19,7 +19,7 @@ AppをProviderでラップしてそこでstoreを渡す
 */
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <EventsIndex />
     </Provider>,
     document.getElementById('root')
 );
