@@ -31,7 +31,9 @@ class EventsNew extends Component {
 
     render() {
         // handleSubmitはrenderが実行された時に渡ってくる関数なのでここで拾っとく
-        const { handleSubmit } = this.props
+        // pristine 何も入力されていない状態を示すもの。これを活用してサブミットボタンを制御する
+        // submitting サブミットしたらTrueになる。これを使ってダブルクリックを制御する
+        const { handleSubmit, pristine, submitting } = this.props
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
                 <div>
@@ -40,7 +42,7 @@ class EventsNew extends Component {
                 </div>
 
                 <div>
-                    <input type="submit" value="Submit" disabled={false} />
+                    <input type="submit" value="Submit" disabled={pristine || submitting} />
                     <Link to="/" >Cancel</Link>
                 </div>
             </form>
