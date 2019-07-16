@@ -1,12 +1,15 @@
 // JSXのタグはトランスパイルをするとReact.create.elementに変換されるので必ず必要
 import React, {Component} from 'react';
-import propTypes from 'prop-types';
+// import propTypes from 'prop-types';
+
+// 演習07でインポート
+import { connect } from 'react-redux'
+import { increment, decrement } from '../actions'
 
 /*
 演習03 コンポーネント
   クラスコンポーネント
-*/
-/*
+
  class App extends Component {
    render(){
      return (
@@ -27,8 +30,7 @@ import propTypes from 'prop-types';
   class名を定義するためにはclassNameとする
   returnで返すタブは1つでなければならないのでdevで囲う
   React.Fragmentを使うことで不要なdevを使わなくてもいい
-*/
- /*
+
   const test = "Hi!, Tommy"
   const dom = <h1 className="foo">{test}</h1>;
   return dom
@@ -44,8 +46,7 @@ import propTypes from 'prop-types';
 /*
 演習03 コンポーネント
   関数コンポーネントの値を読み込む
-*/
- /*
+
   return(
     <div>
       <Cat />
@@ -59,8 +60,7 @@ import propTypes from 'prop-types';
 演習04 props
   props 親のコンポーネントから子コンポーネントにデータを渡したいときに使う
   propsの要素はMapで管理
-*/
-/*
+
   const profiles = [
     {name: "taro", age: 10},
     {name: "hanako", age: 5},
@@ -81,8 +81,7 @@ import propTypes from 'prop-types';
 /*
   演習03 コンポーネント
   関数コンポーネントの値を読み込む
-*/
-/*
+
 const Cat = () =>{
   return <div>Neow!</div>
 }
@@ -92,17 +91,18 @@ const Cat = () =>{
 演習04 props
   propsとは、コンポーネントの属性のこと
   あるデータの属性に対して参照できるもの
-*/
+
 const User = (props) =>{
 return <div>Hi! I am {props.name}, and {props.age} years old! </div>
 }
+*/
 
 /*
 演習 05 prop-types
   prop-types コンポーネントのプロパティに対する型をチェックを定義する
   propTypes.型名で型を宣言
   .isRequiredで必須項目の設定ができる
-*/
+
 User.propTypes = {
   name: propTypes.string,
   age: propTypes.number.isRequired
@@ -112,6 +112,7 @@ User.propTypes = {
 User.defaultProps ={
   age: 1
 }
+*/
 
 /*
  演習 06 state
@@ -119,8 +120,8 @@ User.defaultProps ={
         またpropsは変更不可能な値、イミュータブルな値だったのに対してstateは変更可能
   
   このアップコンポーネントがカウンターコンポーネントを呼ぶ
-*/
-const App = () => (<Counter></Counter>)
+
+ const App = () => (<Counter></Counter>)
 
 class Counter extends Component {
   // コンポーネントの初期化
@@ -154,5 +155,46 @@ class Counter extends Component {
       )
   }
 }
+*/
 
-export default App;
+/* 
+演習07 redux
+  Connectでstateとactionとの関連付けを行う
+  インスタンスのpropsに状態やアクションを渡すのでpropsを変数に入れる
+*/
+class App extends Component {
+  render() {
+    const props = this.props
+
+    return (
+      <React.Fragment>
+        <div>value: { props.value }</div>
+        <button onClick={ props.increment }> +1 </button>
+        <button onClick={ props.decrement }> -1 </button>
+      </React.Fragment>
+      )
+  }
+}
+
+/*
+mapStateToProps
+stateの情報からこのコンポーネントで必要なものを取り出してコンポーネント内のPropsにマッピングする
+引数には、状態のトップレベルを表すstate
+戻り値には、どういったオブジェクトをPropsとして対応させるのかを定義
+stateをもらいvalueをキーにstate.count.valueというオブジェクトを返す
+*/
+const mapStateToProps = state => ({ value: state.count.value })
+
+/*
+mapDispatchToProps
+あるアクションが実行された時にReducerにタイプに応じた状態遷移を実行させる関数
+*/
+//const mapDispatchToProps = dispatch =>({
+//  increment: () => dispatch(increment()),
+//  decrement: () => dispatch(decrement())
+//})
+
+//　こんな風にも書ける
+const mapDispatchToProps = ({ increment, decrement })
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
