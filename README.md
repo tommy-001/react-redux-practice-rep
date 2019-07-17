@@ -30,3 +30,17 @@ https://redux-form.com/8.2.2/
 ```
 yarn add redux-form
 ```
+
+デバックツール
+状態遷移が多い時にデバックを楽にしてくれる
+拡張をインストールして有効にする
+```
+yarn add redux-devtools-extension
+```
+
+マテリアルUI
+UIをいい感じにするやつ
+https://material-ui.com/
+```
+yarn add material-ui
+```
