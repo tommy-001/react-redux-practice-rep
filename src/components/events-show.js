@@ -62,7 +62,7 @@ class EventsShow extends Component {
                 <div><Field label="Body" name="body" type="text" component={this.renderField} /></div>
         
                 <div>
-                <RaisedButton label="Submit" type="submit" style={style} disabled={pristine || submitting || invalid} />
+                <RaisedButton label="Update" type="submit" style={style} disabled={pristine || submitting || invalid} />
                 <RaisedButton label="Cancel" style={style} containerElement={<Link to="/" />}/>
                 <RaisedButton label="Delete" style={style} onClick={this.onDeleteClick}/>
                 </div>
