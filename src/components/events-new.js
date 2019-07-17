@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
+
 
 import { postEvents } from '../actions'
 
@@ -17,10 +20,14 @@ class EventsNew extends Component {
         const { input, label, type, meta: {touched, error} } = field
 
         return (
-            <div>
-                <input {...input} placeholder={label} type={type} />
-                { touched && error && <span>{error}</span> }
-            </div>
+        <TextField
+            hintText={label}
+            floatingLabelText={label}
+            type={type}
+            errorText={touched && error}
+            {...input}
+            fullWidth={true}
+        />
         )
     }
 
@@ -32,19 +39,21 @@ class EventsNew extends Component {
     render() {
         // handleSubmitはrenderが実行された時に渡ってくる関数なのでここで拾っとく
         // pristine 何も入力されていない状態を示すもの。これを活用してサブミットボタンを制御する
-        // submitting サブミットしたらTrueになる。これを使ってダブルクリックを制御する
-        const { handleSubmit, pristine, submitting } = this.props
+        // submitting サブミットしたらTrueになる。これを使ってダブルクリックを許さない
+        const { handleSubmit, pristine, submitting, invalid } = this.props
+        const style = { margin: 12 }
+
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
-                <div>
-                    <Field label="Title" name="title" type="text" component={this.renderField} />
-                    <Field label="Body" name="body" type="text" component={this.renderField} />
-                </div>
-
-                <div>
-                    <input type="submit" value="Submit" disabled={pristine || submitting} />
-                    <Link to="/" >Cancel</Link>
-                </div>
+                <div><Field label="Title" name="title" type="text" component={this.renderField} /></div>
+                <div><Field label="Body" name="body" type="text" component={this.renderField} /></div>
+        
+                {/* 以下のいずれかに該当する場合はSubmitボタンが非活性状態となります。 */}
+                {/* - 初期値と同じ場合 */}
+                {/* - 送信中の場合 */}
+                {/* - バリデーションエラーが有る場合 */}
+                <RaisedButton label="Submit" type="submit" style={style} disabled={pristine || submitting || invalid} />
+                <RaisedButton label="Cancel" style={style} containerElement={<Link to="/" />}/>
             </form>
         )
     }
